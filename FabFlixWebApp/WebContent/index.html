@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Movie Search and Browse</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+	<div class="jumbotron">
+		<h1>Movie Search and Browse</h1>
+		<p>Search for movies that meet your search criteria!</p>
+	</div>
+</div>
+<button id = "goCart" type="button" class="btn btn-light">Go To Cart</button>
+<form id="search_form" action="#" method="post">
+  <div class="form-group row">
+    <label for="inputTitle" class="col-sm-2 col-form-label">Title</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" name="inputTitle" placeholder="Movie Title">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="inputYear" class="col-sm-2 col-form-label">Year</label>
+    <div class="col-sm-10">
+      <input type="number" class="form-control" name="inputYear" placeholder="Year">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="inputDirector" class="col-sm-2 col-form-label">Director</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" name="inputDirector" placeholder="Director Name">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="inputStar" class="col-sm-2 col-form-label">Star</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" name="inputStar" placeholder="Star Name">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="exampleFormControlSelect1">Select Number of results per page</label>
+    <select class="form-control" name="NumResultSelect">
+      <option value="10">10</option>
+      <option value="25">25</option>
+      <option value="50">50</option>
+      <option value="100">100</option>
+    </select>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-10">
+      <button type="submit" class="btn btn-primary" id="submitButtonSearch">Search</button>
+    </div>
+  </div>
+</form>
+<form id="browse_form_genre" action="#" method="post">
+  <div class="form-group">
+    <label for="exampleFormControlSelect1">Select a Genre</label>
+    <select class="form-control" name="genre" id="genreList">
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="exampleFormControlSelect1">Select Number of results per page</label>
+    <select class="form-control" name="NumResultSelect">
+      <option value="10">10</option>
+      <option value="25">25</option>
+      <option value="50">50</option>
+      <option value="100">100</option>
+    </select>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-10">
+      <button type="submit" class="btn btn-primary" id="submitButtonGenre">Browse</button>
+    </div>
+  </div>
+</form>
+<form id="browse_form_letter" action="#" method="post">
+  <div class="form-group">
+    <label for="exampleFormControlSelect1">Select a Starting Letter</label>
+    <select class="form-control" name="startingLetter" id="startingLetter">
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="exampleFormControlSelect1">Select Number of results per page</label>
+    <select class="form-control" name="NumResultSelect">
+      <option value="10">10</option>
+      <option value="25">25</option>
+      <option value="50">50</option>
+      <option value="100">100</option>
+    </select>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-10">
+      <button type="submit" class="btn btn-primary" id="submitButtonLetter">Browse</button>
+    </div>
+  </div>
+</form>
+<script src="index.js"></script>
+<script src="goCart.js"></script>
+</body>
+</html>

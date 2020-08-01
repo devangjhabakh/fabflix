@@ -7,9 +7,19 @@ function handleResultError(resultData){
 	console.log(resultData);
 }
 
-function handleResultSuccess(resultData){
+function handleCaptchaSuccess(){
 	console.log("Handle Result Success");
 	window.location.replace("index.html");
+}
+
+function handleResultSuccess(resultData){
+	jQuery.ajax({
+		url: "api/login",
+		method: "POST",
+		data: resultData,
+		success: () => handleCaptchaSuccess(),
+		error: () => handleResultError()
+	})
 }
 
 function formDataHandler(formEvent){
@@ -20,10 +30,10 @@ function formDataHandler(formEvent){
 	console.log(formData);
 	
 	jQuery.ajax({
-		url: "api/login",
+		url: "api/form-recaptcha",
 		method: "POST",
 		data: formData,
-		success: (resultData) => handleResultSuccess(resultData),
+		success: () => handleResultSuccess(formData),
 		error: (resultData) => handleResultError(resultData)
 	})
 }

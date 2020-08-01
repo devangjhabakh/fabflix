@@ -63,7 +63,7 @@ public class LoginFilter implements Filter {
 	
 	private boolean canAccessWithoutLogin(String URI) {
 		URI = URI.toLowerCase();
-		return URI.endsWith("login.html") || URI.endsWith("login.js") || URI.endsWith("api/login");
+		return URI.endsWith("login.html") || URI.endsWith("login.js") || URI.endsWith("api/login") || URI.endsWith("form-recaptcha");
 	}
 	
 }

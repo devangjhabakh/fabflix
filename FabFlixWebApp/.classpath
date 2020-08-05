@@ -23,5 +23,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="/Users/devan/Documents/Online Courses/CS122B/apache-tomcat-8.5.57/lib/gson-2.3.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/devan/Documents/Online Courses/CS122B/jasypt-1.9.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

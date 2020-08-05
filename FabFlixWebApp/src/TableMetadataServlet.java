@@ -41,54 +41,76 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class LoginServlet
+ * Servlet implementation class TableMetadataServlet
  */
-@WebServlet(name = "/LoginServlet", urlPatterns = "/api/login")
-public class LoginServlet extends HttpServlet {
+@WebServlet(name = "/TableMetadataServlet", urlPatterns = "/api/table_metadata")
+public class TableMetadataServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+     
 	@Resource(name = "jdbc/moviedb")
-	private DataSource dataSource;
+    private DataSource dataSource;
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		response.setContentType("application/json");
+		
 		PrintWriter out = response.getWriter();
-		String email = request.getParameter("email");
-		String password = request.getParameter("password");
+		
 		try {
 			Connection dbcon = dataSource.getConnection();
-		
-			String query = "select count(*) as numUsers, customers.id as id from customers where email = ? group by customers.id";
-			PreparedStatement statement = dbcon.prepareStatement(query);
 			
-			statement.setString(1, email);
-	 	
-			ResultSet rs = statement.executeQuery();
-
-			new VerifyPassword();
-			if(rs.next() && VerifyPassword.verifyCredentials(email, password)) {
-				request.getSession().setAttribute("user", new User(email, rs.getString("id")));
-				response.setStatus(200);
+			String query = "show tables";
+			
+			Statement statement = dbcon.createStatement();
+			ResultSet rs = statement.executeQuery(query);
+			
+			JsonArray jsonArray = new JsonArray();
+			
+			while(rs.next()) {
+				JsonArray jsonArray2 = new JsonArray();
+				
+				String tablename = rs.getString("Tables_in_moviedb");
+				String tableQuery = "select column_name as attribute, data_type as type from information_schema.columns where table_schema = 'moviedb' and table_name = ?";
+				
+				PreparedStatement tableStatement = dbcon.prepareStatement(tableQuery);
+				tableStatement.setString(1, tablename);
+				
+				ResultSet rs2 = tableStatement.executeQuery();
+				
+				while(rs2.next()) {
+					JsonObject jsonObject = new JsonObject();
+					
+					jsonObject.addProperty("attribute", rs2.getString("attribute"));
+					jsonObject.addProperty("type", rs2.getString("type"));
+					
+					jsonArray2.add(jsonObject);
+				}
+				
+				JsonObject jsonObject3 = new JsonObject();
+				
+				jsonObject3.addProperty("tablename", tablename);
+				jsonObject3.add("schema", jsonArray2);
+				
+				jsonArray.add(jsonObject3);
+				
+				tableStatement.close();
 			}
-			else {
-				response.setStatus(500);
-				JsonObject jsonObject = new JsonObject();
-				jsonObject.addProperty("message", "Either the email or the password is incorrect!");
-				jsonObject.addProperty("query", statement.toString());
-				jsonObject.addProperty("user", email);
-				jsonObject.addProperty("pw", password);
-				out.write(jsonObject.toString());
-			}
+			
+			out.write(jsonArray.toString());
+			
+			response.setStatus(200);
 			
 			rs.close();
-			statement.close();
 			dbcon.close();
+			statement.close();
 		} catch (Exception e) {
-			response.setStatus(500);
+			//Write error message to the JSON object to output
 			JsonObject jsonObject = new JsonObject();
-			jsonObject.addProperty("message", e.getMessage());
+			jsonObject.addProperty("errorMessage", e.getMessage());
 			out.write(jsonObject.toString());
+			
+			//Set response status to 500 (Internal server error)
+			response.setStatus(500);
 		}
-	out.close();
+		out.close();
 	}
 
 }

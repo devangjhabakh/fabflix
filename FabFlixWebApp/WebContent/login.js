@@ -4,7 +4,7 @@
 
 function handleResultError(resultData){
 	console.log("Handle Result Error");
-	console.log(resultData);
+	jQuery("#login_error_message").html(resultData);
 }
 
 function handleCaptchaSuccess(){

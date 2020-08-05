@@ -41,54 +41,65 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class LoginServlet
+ * Servlet implementation class DashboardLoginServlet
  */
-@WebServlet(name = "/LoginServlet", urlPatterns = "/api/login")
-public class LoginServlet extends HttpServlet {
+@WebServlet(name = "/DashboardLoginServlet", urlPatterns = "/api/dashboard_login")
+public class DashboardLoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+    
 	@Resource(name = "jdbc/moviedb")
-	private DataSource dataSource;
+    private DataSource dataSource;
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		System.out.println("Starting check!");
+		response.setContentType("application/json");
+		
 		PrintWriter out = response.getWriter();
+		
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
+		
+		System.out.println("Got Values!");
+		
 		try {
 			Connection dbcon = dataSource.getConnection();
-		
-			String query = "select count(*) as numUsers, customers.id as id from customers where email = ? group by customers.id";
+			
+			String query = "select count(*) as customerCount from employee where employee.email = ? and employee.password = ?";
+			
 			PreparedStatement statement = dbcon.prepareStatement(query);
 			
 			statement.setString(1, email);
-	 	
+			statement.setString(2, password);
+			
+			System.out.println("The query is "+ statement.toString());
+			
 			ResultSet rs = statement.executeQuery();
-
-			new VerifyPassword();
-			if(rs.next() && VerifyPassword.verifyCredentials(email, password)) {
-				request.getSession().setAttribute("user", new User(email, rs.getString("id")));
+			
+			rs.next();
+			
+			if(rs.getInt("customerCount") != 0) {
 				response.setStatus(200);
+				JsonObject jsonObject = new JsonObject();
+				jsonObject.addProperty("message", "Correct!");
+				out.write(jsonObject.toString());
 			}
 			else {
 				response.setStatus(500);
 				JsonObject jsonObject = new JsonObject();
-				jsonObject.addProperty("message", "Either the email or the password is incorrect!");
+				jsonObject.addProperty("message", "Incorrect!");
 				jsonObject.addProperty("query", statement.toString());
-				jsonObject.addProperty("user", email);
-				jsonObject.addProperty("pw", password);
+				System.out.println("Oops!");
 				out.write(jsonObject.toString());
 			}
-			
 			rs.close();
 			statement.close();
 			dbcon.close();
-		} catch (Exception e) {
+		} catch(Exception e) {
 			response.setStatus(500);
 			JsonObject jsonObject = new JsonObject();
 			jsonObject.addProperty("message", e.getMessage());
 			out.write(jsonObject.toString());
 		}
-	out.close();
+		out.close();
 	}
 
 }

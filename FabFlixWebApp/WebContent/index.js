@@ -76,6 +76,30 @@ function createLetterList(resultData){
 	}
 }
 
+function getMoviesWith(request,response){
+	let movieList = [];
+	currRequest.abort();
+	console.log(typeof(request) + " " + typeof(response));
+	let titleStarts = request["term"].split(" ");
+	for(let j=0;j<titleStarts.length;++j){
+		let currTitle = {title: titleStarts[j]};
+		currRequest = jQuery.ajax({
+			url: "api/movietitles",
+			method: "POST",
+			data: currTitle,
+			success: (allTitles) => {
+				for(let i=0;i<allTitles.length;++i){
+					movieList.push(allTitles[i]["name"]);
+				}
+			},
+			error: (errorMessage) => {
+				console.log(errorMessage);
+			}
+		});
+	}
+	response(movieList);
+}
+
 jQuery.ajax({
 	method: "POST",
 	url: "api/genreList",
@@ -88,6 +112,41 @@ jQuery.ajax({
 	success: (resultData) => createLetterList(resultData)
 })
 
+let cachedResults = {}
+
 jQuery("#search_form").submit((event) => searchFormEventHandler(event));
 jQuery("#browse_form_genre").submit((event) => browseFormGenreEventHandler(event));
 jQuery("#browse_form_letter").submit((event) => browseFormLetterEventHandler(event));
+jQuery("#title").autocomplete({
+	delay: 300,
+	source: function (request, response) {
+		console.log(request.term);
+		if(cachedResults[request.term] != undefined){
+			console.log("Using cache!");
+			response(cachedResults[request.term]);
+		}
+		else{
+			console.log("Querying!");
+			jQuery.ajax({
+				url: "api/movietitles",
+				method: "POST",
+				data: request,
+				success: (allTitles) => {
+					cachedResults[request.term] = allTitles;
+					response(allTitles)
+				},
+				error: (errorMessage) => {
+					console.log(errorMessage);
+				}
+			});
+		}
+	},
+	select: function(event, ui){
+		console.log("select called!");
+		window.location.replace("single-movie.html?id=" + ui["item"]["value"]);
+	},
+	focus: function(event, ui){
+		jQuery("#title").val(ui["item"]["label"]);
+	},
+	appendTo: jQuery("ui-front")
+})

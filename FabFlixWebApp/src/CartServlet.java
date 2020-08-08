@@ -2,6 +2,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -43,17 +45,23 @@ import javax.servlet.http.HttpServletResponse;
 public class CartServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	@Resource(name = "jdbc/moviedb")
-	private DataSource dataSource;
+//	@Resource(name = "jdbc/moviedb")
+//	private DataSource dataSource;
        
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
 		response.setContentType("application/json");
 		try {
+			
+			Context initContext = new InitialContext();
+            Context envContext = (Context) initContext.lookup("java:/comp/env");
+            DataSource dataSource = (DataSource) envContext.lookup("jdbc/moviedb");
+			
 			User current = (User) request.getSession().getAttribute("user");
 			HashMap<String,Integer> cartMap = current.getCart();
 			Connection dbcon = dataSource.getConnection();
 			JsonArray jsonArray = new JsonArray();
+			
 			for(String key: cartMap.keySet()) {
 				String query = "select movies.title as title, movies.id as movie_id from movies where movies.id = ?";
 				PreparedStatement statement = dbcon.prepareStatement(query);

@@ -2,6 +2,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -47,14 +49,18 @@ import javax.servlet.http.HttpServletResponse;
 public class TableMetadataServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
      
-	@Resource(name = "jdbc/moviedb")
-    private DataSource dataSource;
+//	@Resource(name = "jdbc/moviedb")
+//    private DataSource dataSource;
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json");
 		
 		PrintWriter out = response.getWriter();
 		
 		try {
+			Context initContext = new InitialContext();
+            Context envContext = (Context) initContext.lookup("java:/comp/env");
+            DataSource dataSource = (DataSource) envContext.lookup("jdbc/moviedb");
+			
 			Connection dbcon = dataSource.getConnection();
 			
 			String query = "show tables";

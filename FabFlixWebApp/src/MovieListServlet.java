@@ -2,6 +2,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -48,8 +50,8 @@ import javax.servlet.http.HttpServletResponse;
 public class MovieListServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-	@Resource(name = "jdbc/moviedb")
-    private DataSource dataSource;
+//	@Resource(name = "jdbc/moviedb")
+//    private DataSource dataSource;
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -59,6 +61,10 @@ public class MovieListServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		
 		try {
+			Context initContext = new InitialContext();
+            Context envContext = (Context) initContext.lookup("java:/comp/env");
+            DataSource dataSource = (DataSource) envContext.lookup("jdbc/moviedb");
+			
 			Connection dbcon = dataSource.getConnection();
 			
 			String query = "select movies.id as movie_id, movies.title as title, movies.year as year, movies.director as director,(select group_concat(stars.id) from stars, stars_in_movies where movies.id = stars_in_movies.movieId and stars.id = stars_in_movies.starId) as starIdList ,(select group_concat(genres.name) from genres, genres_in_movies where genres_in_movies.movieId = movies.id and genres.id = genres_in_movies.genreId) as genreList, (select group_concat(genres.name) from genres, genres_in_movies where genres_in_movies.movieId = movies.id and genres.id = genres_in_movies.genreId) as genreIdList, (select group_concat(stars.name) from stars, stars_in_movies where movies.id = stars_in_movies.movieId and stars.id = stars_in_movies.starId) as starList, ratings.rating as rating from movies, ratings where ratings.movieId = movies.id and movies.title like ? and movies.year like ? and movies.director like ? and movies.id in (select stars_in_movies.movieId from stars_in_movies, stars where stars_in_movies.starId = stars.id and stars.name like ?) and movies.id in (select genres_in_movies.movieId from genres_in_movies, genres where genres.id = genres_in_movies.genreId and genres.name like ?)";

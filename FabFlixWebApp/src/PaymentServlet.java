@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.HashMap;
 
 import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -56,8 +58,8 @@ import javax.servlet.http.HttpServletResponse;
 public class PaymentServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     
-	@Resource(name = "jdbc/moviedb")
-    private DataSource dataSource;
+//	@Resource(name = "jdbc/moviedb")
+//    private DataSource dataSource;
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json");
@@ -65,6 +67,10 @@ public class PaymentServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		
 		try {
+			Context initContext = new InitialContext();
+            Context envContext = (Context) initContext.lookup("java:/comp/env");
+            DataSource dataSource = (DataSource) envContext.lookup("jdbc/moviedb");
+			
 			Connection dbcon = dataSource.getConnection();
 			
 			String query = "select count(*) as count from creditcards where creditcards.firstname = ? and creditcards.lastname = ? and creditcards.expiration = ? and creditcards.id = ?"                              ;

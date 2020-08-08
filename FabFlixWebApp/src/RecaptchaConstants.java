@@ -1,4 +1,4 @@
 
 public class RecaptchaConstants {
-	public static final String SECRET_KEY = "6LfOCLkZAAAAAPvYwRx0fskMj0JgMi_nmRQoDk6D";
+	public static final String SECRET_KEY = "6Ld55LsZAAAAAEUT2dXZCl77u_AzFOZtUuibIGvQ";
 }

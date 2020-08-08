@@ -2,6 +2,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -47,8 +49,8 @@ import javax.servlet.http.HttpServletResponse;
 public class DashboardLoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     
-	@Resource(name = "jdbc/moviedb")
-    private DataSource dataSource;
+//	@Resource(name = "jdbc/moviedb")
+//    private DataSource dataSource;
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Starting check!");
 		response.setContentType("application/json");
@@ -61,6 +63,10 @@ public class DashboardLoginServlet extends HttpServlet {
 		System.out.println("Got Values!");
 		
 		try {
+			Context initContext = new InitialContext();
+            Context envContext = (Context) initContext.lookup("java:/comp/env");
+            DataSource dataSource = (DataSource) envContext.lookup("jdbc/moviedb");
+			
 			Connection dbcon = dataSource.getConnection();
 			
 			String query = "select count(*) as customerCount from employee where employee.email = ? and employee.password = ?";

@@ -2,6 +2,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -48,8 +50,8 @@ import javax.servlet.http.HttpServletResponse;
 public class AddMovieServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
    
-	@Resource(name = "jdbc/moviedb")
-    private DataSource dataSource;
+//	@Resource(name = "jdbc/moviedb")
+//    private DataSource dataSource;
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -66,6 +68,11 @@ public class AddMovieServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		
 		try {
+			
+			Context initContext = new InitialContext();
+            Context envContext = (Context) initContext.lookup("java:/comp/env");
+            DataSource dataSource = (DataSource) envContext.lookup("jdbc/moviedb");
+			
 			Connection dbcon = dataSource.getConnection();
 			
 			String movieQuery = "select count(*) as movieCount from movies where movies.title = ? and movies.director = ? and movies.year = ?";

@@ -54,8 +54,8 @@ public class CartBuilderServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     
 	// Create a dataSource which is registered in web.xml
-    @Resource(name = "jdbc/moviedb")
-    private DataSource dataSource;
+//    @Resource(name = "jdbc/moviedb")
+//    private DataSource dataSource;
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String movie_id = request.getParameter("movie_id");

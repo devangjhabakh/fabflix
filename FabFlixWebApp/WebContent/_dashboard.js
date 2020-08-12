@@ -61,7 +61,7 @@ function handleMovieInput(event){
 	formData = jQuery("#movie-input").serialize();
 	
 	jQuery.ajax({
-		url: "api/add_movie",
+		url: "add_movie/add",
 		method: "POST",
 		data: formData,
 		success: (successInformation) => handleMovieInputStatus(successInformation),

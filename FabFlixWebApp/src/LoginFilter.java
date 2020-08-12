@@ -64,7 +64,7 @@ public class LoginFilter implements Filter {
 	
 	private boolean canAccessWithoutLogin(String URI) {
 		URI = URI.toLowerCase();
-		return URI.endsWith("login.html") || URI.endsWith("login.js") || URI.endsWith("api/table_metadata") || URI.endsWith("api/add_movie") || URI.endsWith("api/login") || URI.endsWith("form-recaptcha") || URI.endsWith("_dashboard.html") || URI.endsWith("_dashboard.js") || URI.endsWith("_dashboard") || URI.endsWith("api/dashboard_login");
+		return URI.endsWith("payment/pay") || URI.endsWith("login.html") || URI.endsWith("login.js") || URI.endsWith("api/table_metadata") || URI.endsWith("add_movie/add") || URI.endsWith("api/login") || URI.endsWith("form-recaptcha") || URI.endsWith("_dashboard.html") || URI.endsWith("_dashboard.js") || URI.endsWith("_dashboard") || URI.endsWith("api/dashboard_login");
 	}
 	
 }

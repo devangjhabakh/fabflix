@@ -7,7 +7,7 @@ jQuery("#payment_form").submit((formData) => {
 	jQuery.ajax({
 		method: "POST",
 		data: jQuery("#payment_form").serialize(),
-		url: "api/payment",
+		url: "payment/pay",
 		success: () => {
 			window.location.replace("confirmation.html");
 		}

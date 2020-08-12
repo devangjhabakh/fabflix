@@ -46,7 +46,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class add_movie
  */
-@WebServlet(name = "/AddMovieServlet", urlPatterns = "/api/add_movie")
+@WebServlet(name = "/AddMovieServlet", urlPatterns = "/add_movie/add")
 public class AddMovieServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
    

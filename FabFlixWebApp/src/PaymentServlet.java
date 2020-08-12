@@ -54,7 +54,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class PaymentServlet
  */
-@WebServlet(name = "/PaymentServlet", urlPatterns = "/api/payment")
+@WebServlet(name = "/PaymentServlet", urlPatterns = "/payment/pay")
 public class PaymentServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     
